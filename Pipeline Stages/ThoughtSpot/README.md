@@ -1,1 +1,4 @@
 # Visualizations
+
+### General Approach
+
