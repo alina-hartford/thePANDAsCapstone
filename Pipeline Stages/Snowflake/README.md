@@ -5,8 +5,8 @@ Our team utilized Snowflake to ingest the transformed data from Databricks in or
 Snowflake was extremely helpful for joining related tables together and allowing us to verify data quality. We also reran some cleaning processes in Databricks after finding new outliers from our SQL queries.
 With our data being fully cleaned and transformed, we created joined views that will be used for data visualization later on in our data pipeline.
 ### <ins> DDL Statements </ins>
-After uploading all of our transformed data to Snowflake via an external stage, we created four tables to house the data and help us verify data accuracy and quality.
-These tables include the fully transformed taxi data, the fully transformed HVFHV data, the license number table, and the taxi zone lookup table. We also created two outlier tables for HVFHV and Taxi so other data/business teams can look into potential data entry issues. Here are the DDL statements for each table:
+After uploading all of our transformed data to Snowflake via an external stage, we created five tables to house the data and help us verify data accuracy and quality.
+These tables include the fully transformed taxi data, the fully transformed HVFHV data, the license number table, the taxi zone lookup table, and the external NYC landmark dataset. We also created two outlier tables for HVFHV and Taxi so other data/business teams can look into potential data entry issues. Here are the DDL statements for each table:
 
 #### Taxi DDL Code
 ```sql
@@ -67,6 +67,13 @@ CREATE OR REPLACE TRANSIENT TABLE CAPSTONE_DE.GROUP_1.TAXI_ZONE_TBL (
     BOROUGH STRING,
     ZONE STRING,
     SERVICE_ZONE STRING
+);
+```
+### NYC Landmark DDL Code
+```sql
+-- Will be added later
+CREATE OR REPLACE TRANSIENT TABLE CAPSTONE_DE.GROUP_1.NYC_LANDMARK_TBL (
+    CATEGORY STRING
 );
 ```
 ### <ins> Table Views for Business Needs </ins>
