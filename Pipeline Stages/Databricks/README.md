@@ -100,9 +100,9 @@ conformed_hvfhv = conformed_hvfhv.filter((conformed_hvfhv['total_amount'] / conf
 conformed_hvfhv = conformed_hvfhv.filter((conformed_hvfhv['DOLocationID'] != 264) & (conformed_hvfhv['DOLocationID'] != 265))
 conformed_hvfhv = conformed_hvfhv.filter(conformed_hvfhv['driver_pay'] >= 0)
 
-hvfhv_transformed = conformed_hvfhv.select('hvfhs_license_num', 'dispatching_base_num', 'request_datetime', 'tpep_pickup_datetime',
-'tpep_dropoff_datetime', 'PULocationID', 'DOLocationID', 'trip_distance', 'trip_duration', 'fare_amount', 'tip_amount',
-'driver_pay', 'total_amount', "Year", "Month", "Day", "Day_Of_Week_Name", "Is_Weekend")
+hvfhv_transformed = conformed_hvfhv.select('hvfhs_license_num', 'dispatching_base_num', 'request_datetime',
+'tpep_pickup_datetime', 'tpep_dropoff_datetime', 'PULocationID', 'DOLocationID', 'trip_distance', 'trip_duration',
+'fare_amount', 'tip_amount', 'driver_pay', 'total_amount', "Year", "Month", "Day", "Day_Of_Week_Name", "Is_Weekend")
 ```
 ### <ins> Transforming for our Use Case</ins>
 For our external dataset, we performed similar transformations in this ETL process. We normalized column names, fixed column data types, and dropped records with null in significant columns. Below are the transformations applied to the dataset:
