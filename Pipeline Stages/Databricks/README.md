@@ -105,3 +105,24 @@ hvfhv_transformed = conformed_hvfhv.select('hvfhs_license_num', 'dispatching_bas
 'driver_pay', 'total_amount', "Year", "Month", "Day", "Day_Of_Week_Name", "Is_Weekend")
 ```
 ### <ins> Transforming for our Use Case</ins>
+For our external dataset, we performed similar transformations in this ETL process. We normalized column names, fixed column data types, and dropped records with null in significant columns. Below are the transformations applied to the dataset:
+#### Landmarks
+```python
+landmarks = landmarks.dropDuplicates()
+individual_landmarks = landmarks.select('LPC_NAME', 'LPC_Altern', 'BuildType', 'USE_ORIG', 'Use_Second', 'Use_Tertia',
+'BORO', 'NEIGHBORHO', 'Address', 'latitude', 'longitude', 'geometry', 'FID', 'OBJECTID', 'Block', 'Lot',
+'BBL', 'Shape_Leng', 'Shape_Area', 'URL_IMAGE')
+
+individual_landmarks = individual_landmarks.na.drop(subset=["LPC_NAME", "Address", "Shape_Leng",
+"BORO", "NEIGHBORHO", "Shape_Area"])
+individual_landmarks = individual_landmarks.withColumnRenamed('LPC_NAME', 'Landmark_Name')
+individual_landmarks = individual_landmarks.withColumnRenamed('LPC_Altern', 'Landmark_Alternate_Name')
+individual_landmarks = individual_landmarks.withColumnRenamed('BORO', 'Borough')
+individual_landmarks = individual_landmarks.withColumnRenamed('NEIGHBORHO', 'Neighborhood')
+individual_landmarks = individual_landmarks.withColumnRenamed('BBL', 'BBL_Code')
+
+cols = ['latitude', 'longitude', 'Shape_Leng', 'Shape_Area']
+for col_name in cols:
+    individual_landmarks = individual_landmarks.withColumn(col_name, col(col_name).cast('float'))
+```
+
