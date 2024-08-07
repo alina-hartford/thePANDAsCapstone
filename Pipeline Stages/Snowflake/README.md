@@ -1,7 +1,7 @@
 # Loading and Querying Data using SQL
 
 ### <ins> General Approach </ins>
-Our team utilized Snowflake to ingest the transformed data from Databricks in order to perform validation queries and create tables/views to be used in ThoughtSpot/ArcGIS.
+Our team utilized Snowflake to ingest the transformed data from Databricks in order to perform validation queries and create tables/views to be used in Tableau/ThoughtSpot.
 Snowflake was extremely helpful for joining related tables together and allowing us to verify data quality. We also reran some cleaning processes in Databricks after finding new outliers from our SQL queries.
 With our data being fully cleaned and transformed, we created joined views that will be used for data visualization later on in our data pipeline.
 ### <ins> DDL Statements </ins>
@@ -97,7 +97,7 @@ CREATE OR REPLACE TRANSIENT TABLE CAPSTONE_DE.GROUP_1.LANDMARKS_TBL (
 ```
 ### <ins> Table Views for Business Needs </ins>
 After populating our tables with INSERT INTO statements (found in table_creation.sql file), we created views of joined tables that we will use to visualize our data.
-Here are the tables we will visualize in ThoughtSpot/ArcGIS:
+Here are the tables we will visualize in Tableau/ThoughtSpot:
 #### Taxi Table for Visualization
 ```sql
 CREATE OR REPLACE VIEW TAXI AS
@@ -114,4 +114,9 @@ SELECT H.LICENSE_NUM, L.COMPANY_NAME AS COMPANY_NAME, PU_DATETIME, DO_DATETIME, 
 FROM HIGH_VOLUME_TBL AS H JOIN TAXI_ZONE_TBL AS TZ ON H.PU_LOCATIONID = TZ.LOCATION_ID
 JOIN TAXI_ZONE_TBL AS TZ2 ON H.DO_LOCATIONID = TZ2.LOCATION_ID
 JOIN LICENSE_TBL AS L ON H.LICENSE_NUM = L.LICENSE_NUM;
+```
+#### Landmarks Table for Visualization
+```sql
+CREATE OR REPLACE VIEW LANDMARKS AS
+SELECT LANDMARK_NAME, ADDRESS, BOROUGH, CATEGORY FROM LANDMARKS_TBL;
 ```
