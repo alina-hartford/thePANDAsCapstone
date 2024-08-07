@@ -1,4 +1,0 @@
-# Visualizations
-
-### General Approach
-
