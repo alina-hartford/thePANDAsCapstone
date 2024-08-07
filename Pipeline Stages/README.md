@@ -1,7 +1,7 @@
 # ETL Pipeline
 
 ### Architecture Diagram
-![design](images/design_diagram.png)
+![design](images/capstone3.drawio.png)
 
 ### Extract
 
