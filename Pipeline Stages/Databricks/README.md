@@ -1,7 +1,7 @@
 # Cleaning and Transforming Data using PySpark
 ### <ins> General Approach </ins>
-For our ETL process, we utilized two instances of Databricks to clean and transform our raw data before loading it into Amazon S3 and Snowflake. The first program (Taxi_Data_Ingestion.dbc) was created to process the yellow taxi, green taxi, and HVFHV data and upload it to our transformed bucket. The second program (External_Data_Ingestion.dbc) was designed to clean our external landmark dataset, add a column for Bedrock's categorical output, and upload it as a parquet file to S3.
-### <ins> Cleaning Raw Data</ins>
+For our ETL process, we utilized two instances of Databricks to clean and transform our raw data before loading it into Amazon S3 and Snowflake. The first program ```Taxi_Data_Ingestion.dbc``` was created to process the yellow taxi, green taxi, and HVFHV data and upload it to our transformed bucket. The second program ```External_Data_Ingestion.dbc``` was designed to clean our external landmark dataset, add a column for Bedrock's categorical output, and upload it as a parquet file to S3.
+### Cleaning Raw Data
 To clean the NYC taxi data, our team performed a number of transformations on each dataset individually before uploading them to our conformed and transformed S3 buckets. These transformations include normalizing column names, filling in null values, and adding datetime columns for partitioning and timeseries analysis. Below are the transformations applied to each dataset:
 #### Yellow Taxi
 ```python
@@ -104,8 +104,8 @@ hvfhv_transformed = conformed_hvfhv.select('hvfhs_license_num', 'dispatching_bas
 'tpep_pickup_datetime', 'tpep_dropoff_datetime', 'PULocationID', 'DOLocationID', 'trip_distance', 'trip_duration',
 'fare_amount', 'tip_amount', 'driver_pay', 'total_amount', "Year", "Month", "Day", "Day_Of_Week_Name", "Is_Weekend")
 ```
-### <ins> Transforming for our Use Case</ins>
-For our external dataset, we performed similar transformations in this ETL process. We normalized column names, fixed column data types, and dropped records with null in significant columns. Below are the transformations applied to the dataset:
+### Transforming for our Use Case
+For our external dataset, we performed similar transformations in this ETL process. We normalized column names, fixed column data types, and dropped records with null in significant columns. We then joined the Bedrock output to the original dataset to get the category column. Below are the transformations applied to the dataset:
 #### Landmarks
 ```python
 landmarks = landmarks.dropDuplicates()
@@ -124,5 +124,19 @@ individual_landmarks = individual_landmarks.withColumnRenamed('BBL', 'BBL_Code')
 cols = ['latitude', 'longitude', 'Shape_Leng', 'Shape_Area']
 for col_name in cols:
     individual_landmarks = individual_landmarks.withColumn(col_name, col(col_name).cast('float'))
+
+categories = spark.read.csv(f's3://{bucket_conformed}/group1/categorized/categorized_landmarks.csv', header = True)
+landmark_data = spark.read.csv(f's3://{bucket_conformed}/group1/landmark_data/part-00000-tid-678635522604453173-0bf97e42-ef1a-46ed-a281-b888c5bacfe5-8-1-c000.csv', header = True)
+ 
+joined_dataset = landmark_data.join(categories, landmark_data['Landmark_Name'] == categories['Name'], how="full_outer")
+ 
+joined_dataset = joined_dataset.na.drop(subset=['Landmark_Name'])
+ 
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == 'Brooklyn Bridge', 'Brooklyn').otherwise(col("Borough")))
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == 'Heckscher Building (now the Crown Building)', 'Manhattan').otherwise(col("Borough")))
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == 'University Heights Bridge', 'Bronx').otherwise(col("Borough")))
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == "Macomb's Dam Bridge and 155th Street Viaduct", 'Bronx').otherwise(col("Borough")))
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == 'Queensboro Bridge', 'Queens').otherwise(col("Borough")))
+joined_dataset = joined_dataset.withColumn("Borough", when(col("Landmark_Name") == 'Washington Bridge', 'Manhattan').otherwise(col("Borough")))
 ```
 

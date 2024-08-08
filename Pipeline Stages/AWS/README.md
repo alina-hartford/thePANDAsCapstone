@@ -12,4 +12,16 @@ Below are screenshots of Amazon Athena where we queried our partitioned taxi dat
 ![taxicrawler](images/crawler2.PNG) ![hvfhvcrawler](images/crawler1.PNG)
 
 #### Amazon Bedrock
-While deliberating our use case and researching for external data, we found that we needed a way to enhance our data by categorizing our landmarks. Since the dataset we found did not have this information, we figured this would be a good opportuntiy to experiment with using Amazon Bedrock. After getting access granted, using boto3, we created a program that utilized the Amazon Titan Text Express model to take in a column of landmark names and descriptions and prompted it to output a category designation for that landmark, choosing from a list of 10 categories that we also generated using Amazon Bedrock. The given prompt asked the model to output the categorizations in a JSON formatted string, which we parsed and added to a dictionary. From this, we were able to create a result dataframe that had a column for the landmark name and the landmark category, which was then joined with the rest of our external data for visualizations. All Amazon Bedrock code can be located in ```landmarks.ipynb```.
+While deliberating our use case and researching for external data, we found that we needed a way to enhance our data by categorizing our landmarks. Since the dataset we found did not have this information, we figured this would be a good opportuntiy to experiment with using Amazon Bedrock. After getting access granted to Bedrock, we used boto3 to create a program that utilized the Amazon Titan Text Express model to take in a column of landmark names and descriptions and prompted it to output a category designation for that landmark, choosing from a list of 10 categories that we also generated using Amazon Bedrock. Categories include:
+* Architecture
+* Civic
+* Commercial
+* Entertainment
+* Financial
+* Historic
+* Industrial
+* Institutional
+* Religion
+* Transportation
+
+The given prompt asked the model to output the categorizations in a JSON formatted string, which we parsed and added to a dictionary. From this, we were able to create a result dataframe that had a column for the landmark name and the landmark category, which was then joined with the rest of our external data for visualizations. All Amazon Bedrock code can be located in ```landmarks.ipynb```.
