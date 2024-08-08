@@ -2,10 +2,6 @@
 
 ## <ins> General Overview </ins>
 
-### ThoughtSpot
-
-query: ```count Category by Borough for each Category```
-
 ### Tableau
 #### Process
 For the Tableau visualizations we created 3 maps to visualize the data aggreagation of both the taxi zones and the landmarks. We utilized geospatial data from the borough shapefiles to map it accurately on Tableau.
@@ -32,3 +28,26 @@ Using this tool, customers would first select what taxi zone they are in, and th
 #### Future Solution
 Our goal for this final visualization is to create a customer friendly application of this dashboard so that this map and its filters would be highly accessible and customers would be able to use this tool while they are traveling to get real time information. We would also be implementing other filter factors so that customer would be able to make more informed decisions. This would include travel cost filters for taxi and high volume for hire vehicles, real time traffic data from traffic cameras, and landmark reviews data from Google and Yelp. This data, along with our previous data, would be fully managed and streamed using Amazon Data Firehose and delivered to our S3 bucket. We also plan on taking the landmark review dataset and run it through AWS Comprehend for sentiment analysis and create a score based on good reviews or bad reviews. From here our data will be going through the established ETL pipeline from before in order to create transformations and for validating the data.
 
+### ThoughtSpot
+
+#### Description
+We decided to utilize ThoughtSpot's AI capabilities to help us visualize our landmark data using a liveboard. By incorporating multiple visualization tools into this project, our findings can appeal to more data and business teams. The dashboard below showcases the distributions of landmarks in each borough as percentages. From this data, we were able to make the following conclusions:
+
+#### Percentage Leaders
+Each borough was a percentage leader in at least one category:
+
+| Borough | Category(s) |
+|--------------|----------------------------|
+| Bronx | Civic, Industrial, Institutional |
+| Brooklyn | Financial |
+| Manhattan | Architecture, Commercial | 
+| Queens | Entertainment | 
+| Staten Island | Historic, Religion, Transportation  | 
+
+#### Key Takeaways
+If you are a tourist looking to see a specific type of landmark, we recommend visiting the corresponding percent leader for that landmark. This is the best course of action because by dividing up tourists into the different boroughs, we can alleviate traffic congestion in Manhattan. If a tourist doesn't have a preference for what landmarks they see, the dashboard indicates that Queens and Brooklyn have the most even distribution of landmarks. Therefore, we recommend these boroughs if tourists want a nice variety of landmarks.
+
+#### Our Landmark Distribution Dashoard
+![ThoughtSpot](images/ThoughtSpotGroup1.png)
+
+Query Used to Generate Visual: ```count Category by Borough for each Category```
